@@ -1,6 +1,19 @@
 ## Find and Replace Across Multiple Files
 
-<http://rufuspollock.org/2006/09/22/find-and-replace-across-multiple-files/>
+1\. Use sed
+
+    sed -i 's/foo/foo_bar/g'  *.html
+
+2\. use the old perl hack
+
+    perl -w -pi~ -e 's/foo/bar/' [files]
+
+Notes: -p: loop, -i edit files in place (backup with extension if supplied), -w enable warnings
+
+Combining either (1) or (2) with *find* is pretty powerful. E.g. to do a find and replace on all html files in all subdirectories:
+    
+    perl -w -pi -e 's/foo/bar/' `find <path> -name '*.html'`
+
 
 ## Find and Remove Broken Symbolic Links
 
