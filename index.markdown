@@ -79,6 +79,34 @@ Extract every 4th line starting at line 0:
 
 ----
 
+## convert (ImageMagick)
+
+    # convert image
+    convert -scale 10% {in} {out}
+
+    # convert to black and white
+    convert -type Grayscale {in} {out}
+    convert -monochrome {in} {out}
+
+    # invert colours
+    convert -negate in out
+
+    # rotation
+    convert -rotate {degrees} {in} {out} 
+
+    # change background color
+
+    # make the given colour (e.g. here white) transparent
+    convert -transparent white {in} {out}
+    # make transparent white
+    convert -fill white -opaque none {in} {out}
+
+
+    # Make square (for thumbnailing)
+    convert -background transparent -gravity center -extent 145x145 file1 file2
+
+----
+
 ## Mercurial
 
 ### Stash working copy changes
