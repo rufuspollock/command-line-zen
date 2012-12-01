@@ -3,13 +3,6 @@ layout: default
 title: Home
 ---
 
-<div class="page-header">
-  <h1>
-    Zen of the Command Line
-    <small>by <a href="http://rufuspollock.org/">Rufus Pollock</a></small>
-  </h1>
-</div>
-
 <div class="description">
   <p><strong>Command line tips and tricks</strong>. Contributions are welcome: just <a href="https://github.com/rgrp/cli-zen/blob/gh-pages/index.markdown">fork the file</a> and submit a pull request.</p>
 </div>
