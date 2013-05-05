@@ -72,7 +72,51 @@ Extract every 4th line starting at line 0:
     # does not seem to auto-detect file type w/o prompting
     s3cmd put --guess-mime-type --acl-public *.css s3://your-bucket/your-dir/
 
-----
+-----------------------------------------------------------
+
+## curl
+
+curl is *awesome*. It connects unix command-line zen with the wide open world
+of the Internet.
+
+### Piping uploads
+
+This is pretty cool ...
+
+    curl http://example.com/down | curl -T - ftp://mysite.org/up
+
+The -T option is very powerful - here's the man page section in its entirety:
+
+     -T/--upload-file <file>
+
+        This transfers the specified local file to the  remote  URL.  If
+        there is no file part in the specified URL, Curl will append the
+        local file name. NOTE that you must use a trailing / on the last
+        directory  to really prove to Curl that there is no file name or
+        curl will think that your last directory name is the remote file
+        name to use. That will most likely cause the upload operation to
+        fail. If this is used on a HTTP(S) server, the PUT command  will
+        be used.
+
+        Use  the file name "-" (a single dash) to use stdin instead of a
+        given file.  Alternately, the file name "."  (a  single  period)
+        may  be  specified  instead  of "-" to use stdin in non-blocking
+        mode to  allow  reading  server  output  while  stdin  is  being
+        uploaded.
+
+        You can specify one -T for each URL on the command line. Each -T
+        + URL pair specifies what to upload and to where. curl also sup‐
+        ports "globbing" of the -T argument, meaning that you can upload
+        multiple files to a single URL by using the  same  URL  globbing
+        style supported in the URL, like this:
+
+        curl -T "{file1,file2}" http://www.uploadtothissite.com
+
+        or even
+
+        curl -T "img[1-1000].png" ftp://ftp.picturemania.com/upload/
+
+-----------------------------------------------------------
 
 ## convert (ImageMagick)
 
