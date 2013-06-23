@@ -7,8 +7,11 @@ title: Home
   <p><strong>Command line tips and tricks</strong>. Contributions are welcome: just <a href="https://github.com/rgrp/cli-zen/blob/gh-pages/index.markdown">fork the file</a> and submit a pull request.</p>
 </div>
 
+# Table of Contents
+
 * This will become a table of contents (this text will be scraped).
 {:toc}
+
 
 ----
 
@@ -24,7 +27,7 @@ title: Home
 
 Notes: -p: loop, -i edit files in place (backup with extension if supplied), -w enable warnings
 
-### Combine with find
+### Combining with find
 
 Combining either (1) or (2) with *find* is pretty powerful. E.g. to do a find and replace on all html files in all subdirectories:
     
