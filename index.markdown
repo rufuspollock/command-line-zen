@@ -7,6 +7,9 @@ title: Home
   <p><strong>Command line tips and tricks</strong>. Contributions are welcome: just <a href="https://github.com/rgrp/cli-zen/blob/gh-pages/index.markdown">fork the file</a> and submit a pull request.</p>
 </div>
 
+* This will become a table of contents (this text will be scraped).
+{:toc}
+
 ----
 
 ## Find and Replace Across Multiple Files
@@ -42,6 +45,18 @@ Combining either (1) or (2) with *find* is pretty powerful. E.g. to do a find an
 For example to change files with extension mkd to rst:
 
     find . -name "*.mkd" | sed "s/\(.*\).mkd/mv \1.mkd \1.rst/g" | sh
+
+----
+
+## Count Number of Files in Directories
+
+In a single directory:
+
+    ls -l | wc -l
+
+In all subdirectories of a given directory:
+
+    find . -type f | wc -l
 
 ----
 
