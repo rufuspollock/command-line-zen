@@ -136,31 +136,55 @@ The -T option is very powerful - here's the man page section in its entirety:
 
 -----------------------------------------------------------
 
-## convert (ImageMagick)
+## convert - ImageMagick
 
-    # convert image
+### Scale Image
+
     convert -scale 10% {in} {out}
 
-    # convert to black and white
+### Convert to black and white
+
     convert -type Grayscale {in} {out}
     convert -monochrome {in} {out}
 
-    # invert colours
+### Invert colours
+
     convert -negate in out
 
-    # rotation
-    convert -rotate {degrees} {in} {out} 
-
-    # change background color
+### Change background color
 
     # make the given colour (e.g. here white) transparent
     convert -transparent white {in} {out}
     # make transparent white
     convert -fill white -opaque none {in} {out}
 
+### Rotation
 
-    # Make square (for thumbnailing)
+    convert -rotate {degrees} {in} {out} 
+
+### Make square (for thumbnailing)
+
     convert -background transparent -gravity center -extent 145x145 file1 file2
+
+### Removing edges
+
+convert provides a somewhat overwhelming number of ways to do this including
+`chop`, `crop` and more. Preferred method I think is is crop.
+
+Remove top 10px of an image
+
+    convert -crop +0+10 +repage {in} {out}
+
+Remove right 10px of an image
+
+    convert -crop -10+0 +repage {in} {out}
+
+Remove bottom 10px of an image
+    convert -crop +0-10 +repage {in} {out}
+
+Remove left 10px of an image
+
+    convert -crop +10+0 +repage {in} {out}
 
 ----
 
