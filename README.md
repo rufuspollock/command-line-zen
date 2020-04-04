@@ -1,19 +1,6 @@
----
-layout: default
-title: Home
----
+# Command Line Zen
 
-<div class="description">
-  <p><strong>Command line tips and tricks</strong>. Contributions are welcome: just <a href="https://github.com/rgrp/cli-zen/blob/gh-pages/index.markdown">fork the file</a> and submit a pull request.</p>
-</div>
-
-# Table of Contents
-
-* This will become a table of contents (this text will be scraped).
-{:toc}
-
-
-----
+Command line tips and tricks</strong>. Contributions are welcome: just fork the file and submit a pull request.
 
 ## Find and Replace Across Multiple Files
 
