@@ -2,26 +2,31 @@
 
 ## Table of Contents
 
-* [Find and Replace Across Multiple Files](#find-and-replace-across-multiple-files)
+* [Find and replace across multiple files](#find-and-replace-across-multiple-files)
     * [1. Use sed](#1-use-sed)
-    * [2. use the old perl hack](#2-use-the-old-perl-hack)
+    * [2. Use the old perl hack](#2-use-the-old-perl-hack)
     * [Combining with find](#combining-with-find)
-* [Find and Remove Broken Symbolic Links](#find-and-remove-broken-symbolic-links)
+* [Find and remove broken symbolic links](#find-and-remove-broken-symbolic-links)
 * [Bulk rename files](#bulk-rename-files)
-* [Count Number of Files in Directories](#count-number-of-files-in-directories)
-* [Extract every nth line of a file (sed)](#extract-every-nth-line-of-a-file-sed)
-* [Delete the first or nth line of a file (sed)](#delete-the-first-or-nth-line-of-a-file-sed)
+* [Count number of files in directories](#count-number-of-files-in-directories)
+* [Working with sed](#working-with-sed)
+    * [Delete a range of lines](#delete-a-range-of-lines)
+    * [Delete the first or nth line of a file](#delete-the-first-or-nth-line-of-a-file)
+    * [Deleting lines matching a pattern in a given file](#deleting-lines-matching-a-pattern-in-a-given-file)
+    * [Extract every nth line of a file](#extract-every-nth-line-of-a-file)
+    * [Replacing occurrences of a pattern](#replacing-occurrences-of-a-pattern)
 * [s3cmd](#s3cmd)
 * [curl](#curl)
     * [Piping uploads](#piping-uploads)
 * [convert - ImageMagick](#convert---imagemagick)
-    * [Scale Image](#scale-image)
+    * [Change background colour](#change-background-colour)
     * [Convert to black and white](#convert-to-black-and-white)
     * [Invert colours](#invert-colours)
-    * [Change background colour](#change-background-colour)
-    * [Rotation](#rotation)
     * [Make square (for thumbnailing)](#make-square-for-thumbnailing)
+    * [Optimizing images](#optimizing-images)
     * [Removing edges](#removing-edges)
+    * [Rotation](#rotation)
+    * [Scale image](#scale-image)
 * [Mercurial](#mercurial)
     * [Stash working copy changes](#stash-working-copy-changes)
 
@@ -30,13 +35,13 @@ the file and submit a pull request.
 
 ----
 
-## Find and Replace Across Multiple Files
+## Find and replace across multiple files
 
 ### 1. Use sed
 
     sed -i 's/foo/foo_bar/g' *.html
 
-### 2. use the old perl hack
+### 2. Use the old perl hack
 
     perl -w -pi~ -e 's/foo/bar/' [files]
 
@@ -52,7 +57,7 @@ to do a find and replace on all `html` files in all subdirectories:
 
 ----
 
-## Find and Remove Broken Symbolic Links
+## Find and remove broken symbolic links
 
      find -L ${directory} -type l
 
@@ -67,9 +72,20 @@ For example to change files recursively with extension `mkd` to `rst`:
 
     find . -name "*.mkd" | sed "s/\(.*\).mkd/mv \1.mkd \1.rst/g" | sh
 
+A simple loop can be used to target only the working directory:
+
+    # rename .log files in the working directory to .bak
+    for j in *.log; do mv -- "$j" "${j%.log}.bak"; done
+
+Similarly, we can target directories recursively with a loop without
+including the working directory:
+
+    # rename .log files recursively (skipping the working directory) to .bak
+    for j in **/*.log; do mv -- "$j" "${j%.log}.bak"; done
+
 ----
 
-## Count Number of Files in Directories
+## Count number of files in directories
 
 In a single directory:
 
@@ -81,13 +97,14 @@ In all subdirectories of a given directory:
 
 ----
 
-## Extract every nth line of a file (sed)
+## Working with sed
 
-Extract every 4<sup>th</sup> line starting at line 0:
+### Delete a range of lines
 
-    sed -n '0~4p' filepath
+    # remove from 3rd line to the end of the file
+    sed '3,$d' filepath
 
-## Delete the first or nth line of a file (sed)
+### Delete the first or nth line of a file
 
     # first line
     sed '1d' filepath
@@ -100,6 +117,40 @@ Extract every 4<sup>th</sup> line starting at line 0:
 
     # remove 7-12th line
     sed '7,12d' filepath
+
+### Deleting lines matching a pattern in a given file
+
+    # the flag "d" is added to specify the operation
+    # (the output appears, the file remains intact)
+    sed '/pattern/d' filepath
+
+    # to modify the file in place, add the "-i" flag
+    sed -i '/pattern/d' filepath
+
+    # same as previous command, but case insensitive
+    sed -i '/pattern/Id' filepath
+
+### Extract every nth line of a file
+
+Extract every 4<sup>th</sup> line starting at line 0:
+
+    sed -n '0~4p' filepath
+
+### Replacing occurrences of a pattern
+
+    # replace 'pattern' with 'new_pattern' when it appears for the
+    # second time ('2' is the 'nth' occurrence desired)
+    sed 's/pattern/new_pattern/2' filepath
+
+    # same as the previous command, but replace greedily the following
+    # occurrences up to the end of the line by adding the 'g' flag,
+    # starting from the 'nth' occurrence
+    sed 's/pattern/new_pattern/2g' filepath
+
+    # we can accomplish the same as above, limiting instead our search
+    # to a range of lines in the file
+    # (here, from line 3 to the end of the file)
+    sed '3,$ s/pattern/new_pattern/' filepath
 
 ----
 
@@ -157,9 +208,13 @@ entirety:
 
 ## convert - ImageMagick
 
-### Scale Image
+### Change background colour
 
-    convert -scale 10% {in} {out}
+    # make the given colour (e.g. here white) transparent
+    convert -transparent white {in} {out}
+
+    # make transparent white
+    convert -fill white -opaque none {in} {out}
 
 ### Convert to black and white
 
@@ -170,21 +225,25 @@ entirety:
 
     convert -negate in out
 
-### Change background colour
-
-    # make the given colour (e.g. here white) transparent
-    convert -transparent white {in} {out}
-
-    # make transparent white
-    convert -fill white -opaque none {in} {out}
-
-### Rotation
-
-    convert -rotate {degrees} {in} {out}
-
 ### Make square (for thumbnailing)
 
     convert -background transparent -gravity center -extent 145x145 file1 file2
+
+### Optimizing images
+
+To save disk space and make files quicker to load on the web, the
+following commands will prove very useful (originally from
+[this Gist](https://gist.github.com/rkbhochalya/d3557a9d122ab547c040af3adbd565c2)).
+
+    # Optimize all PNG images recursively
+    # Print the name of the file being processed
+    find . -name "*.png" -exec convert "{}" -strip "{}" \; -exec echo "{}" \;
+
+    # Optimize all JPEG images recursively
+    find . -name "*.jpg" -exec convert "{}" -sampling-factor 4:2:0 -strip \
+    -quality 85 -interlace JPEG -colorspace RGB "{}" \; -exec echo "{}" \;
+
+The gains, especially for `JPEG` images, can be quite substantial: the file size can be halved while keeping 85% of the original quality.
 
 ### Removing edges
 
@@ -201,11 +260,20 @@ Remove right 10px of an image:
     convert -crop -10+0 +repage {in} {out}
 
 Remove bottom 10px of an image:
+
     convert -crop +0-10 +repage {in} {out}
 
 Remove left 10px of an image:
 
     convert -crop +10+0 +repage {in} {out}
+
+### Rotation
+
+    convert -rotate {degrees} {in} {out}
+
+### Scale image
+
+    convert -scale 10% {in} {out}
 
 ----
 
